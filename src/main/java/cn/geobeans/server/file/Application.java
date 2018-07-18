@@ -1,8 +1,8 @@
 package cn.geobeans.server.file;
 
 import cn.geobeans.server.file.common.L;
-import cn.geobeans.server.file.handler.IndexHandler;
-import cn.geobeans.server.file.handler.StorageHandler;
+import cn.geobeans.server.file.config.Database;
+import cn.geobeans.server.file.handler.*;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -12,6 +12,8 @@ import java.util.concurrent.Executors;
 
 public class Application {
 
+    //是否打印调试信息
+    public static Boolean DEBUG = true;
     //存储路径
     public static String PATH = "/tmp/storage";
     //端口
@@ -25,9 +27,42 @@ public class Application {
      * @param args
      */
     public static void main(String[] args) {
+        if(welcome(args)){
+            init();
+        }
+    }
 
-        L.d("Welcome to GeoBeans File Server.");
+    /**
+     * 服务初始化
+     */
+    private static void init() {
 
+        L.i(String.format("\nFile store path:\t%s\nServer port:\t%s\nMax threads:\t%s",PATH,PORT,MAX_THREAD));
+        try {
+            //初始化数据库
+            Database.init();
+            //启动HTTP服务
+            HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
+            server.createContext("/", new IndexHandler());
+            server.createContext("/upload", new UploadHandler());
+            server.createContext("/get", new GetHandler());
+            server.createContext("/download", new DownloadHandler());
+            server.createContext("/list", new ListHandler());
+            server.setExecutor(getHttpExecutor()); // creates a default executor
+            server.start();
+            L.i(String.format("Please visit：http://localhost:%s/",PORT));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 欢迎并读取配置参数
+     * @param args
+     */
+    private static boolean welcome(String[] args) {
+        boolean rs = true;
+        L.i("Welcome to GeoBeans File Server.");
         for(int i=0;i< args.length;i++){
             String key = args[i];
             if(key.equals("-p")){
@@ -35,39 +70,39 @@ public class Application {
                     PORT = Integer.parseInt(args[i+1]);
                 } catch (NumberFormatException e) {
                     //e.printStackTrace();
-                    L.e("请使用正确的端口, 示例: -p "+PATH);
+                    L.e("Please input correct port number, e.g. -p "+PORT);
+                    rs = false;
                 }
             }else if(key.equals("-t")){
                 try {
                     MAX_THREAD = Integer.parseInt(args[i+1]);
                 } catch (NumberFormatException e) {
                     //e.printStackTrace();
-                    L.e("请使用正确的最大线程数量, 示例: -t "+MAX_THREAD);
+                    L.e("Please input correct max thread number , e.g. -t "+MAX_THREAD);
+                    rs = false;
+                }
+            }else if(key.equals("-c")){
+                try {
+                    PATH = args[i+1];
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                    L.e("Please input correct path , e.g. -c "+PATH);
+                    rs = false;
                 }
             }else if(key.equals("-h") || key.equals("--help")){
-                L.i(String.format("\n-p \t 服务端口地址[默认:%s], 示例: -p %s\n-t \t 最大线程数量[默认:%s], 示例: -t %s\n-s \t 文件存储地址[默认:%s], 示例: -s %s",
-                        PORT,PORT,
-                        MAX_THREAD,MAX_THREAD,
-                        PATH,PATH)
+                L.i(String.format("\n-p Server port, default:%s" +
+                                "\n-t Max thread number, default:%s" +
+                                "\n-s File store path, default:%s" +
+                                "\n-h Show this help" +
+                                "\nIssue commit:https://github.com/DennisGuo/file-server/issues",
+                        PORT,
+                        MAX_THREAD,
+                        PATH)
                 );
-                return ;
+                rs = false;
             }
         }
-        init();
-    }
-
-    private static void init() {
-        L.i(String.format("\n存储路径: \t%s\n服务端口:\t %s\n最大线程数量: \t%s",PATH,PORT,MAX_THREAD));
-        try {
-            HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
-            server.createContext("/", new IndexHandler());
-            server.createContext("/storage", new StorageHandler());
-            server.setExecutor(getHttpExecutor()); // creates a default executor
-            server.start();
-            L.i(String.format("请访问：http://localhost:%s/",PORT));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return rs;
     }
 
     private static Executor getHttpExecutor() {

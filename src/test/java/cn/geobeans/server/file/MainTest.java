@@ -1,10 +1,14 @@
-package cn.geobeans.server.file.common;
+package cn.geobeans.server.file;
 
+import cn.geobeans.server.file.service.FileData;
+import com.alibaba.fastjson.JSON;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
@@ -42,5 +46,22 @@ public class MainTest {
         String str = "guohegnxi,!#  $$qwe  rtas  dfg";
         System.out.println("String length :"+ str.length());
         System.out.println("byte[] length :"+ str.getBytes().length);
+    }
+
+    @Test
+    public void jsonTest(){
+        String json = "{\n" +
+                "  \"MD5\": \"7d35ed24-2037-4982-9ce6-ac3c97058259\",\n" +
+                "  \"NAME\": \"OBSERVATION_RECORD\",\n" +
+                "  \"CONTENT_TYPE\":\"application/printJson\",\n" +
+                "  \"SIZE\":12345\n" +
+                "}";
+        FileData rs = JSON.parseObject(json,FileData.class);
+        System.out.println(JSON.toJSONString(rs,true));
+    }
+
+    @Test
+    public void encode() throws UnsupportedEncodingException {
+        System.out.println(URLEncoder.encode("loveyouX2323#.jpg","UTF-8"));
     }
 }

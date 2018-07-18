@@ -1,6 +1,7 @@
 package cn.geobeans.server.file.handler;
 
 import cn.geobeans.server.file.common.JSONResponse;
+import cn.geobeans.server.file.common.L;
 import com.alibaba.fastjson.JSON;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -17,10 +18,15 @@ import java.util.Map;
 public class BaseHandler implements HttpHandler {
 
     protected static final String CHARSET = "UTF-8";
+    protected static final String KEY_CONTENT_TYPE = "Content-Type";
+
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-
+        L.d(String.format("%s %s , requested from %s",
+                httpExchange.getRequestMethod(),
+                httpExchange.getRequestURI().toString(),
+                httpExchange.getRemoteAddress().toString()));
     }
 
     /**
@@ -30,7 +36,7 @@ public class BaseHandler implements HttpHandler {
      */
     protected void json(HttpExchange httpExchange,JSONResponse body) throws IOException {
         Map<String,String> header = new HashMap<>();
-        header.put("ContentType","application/json; charset="+CHARSET);
+        header.put(KEY_CONTENT_TYPE,"application/json; charset="+CHARSET);
         send(httpExchange, JSON.toJSONString(body).getBytes(CHARSET),header);
     }
 
