@@ -69,7 +69,13 @@ public class FileDataService {
 
         item.write(file);
         String md5 = md5(file);
-        fileData = getByMd5(md5);
+
+        try {
+            fileData = getByMd5(md5);
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+
         if (fileData != null) {
             //如果已经存在了就删除
             file.delete();

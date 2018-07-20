@@ -49,3 +49,96 @@ Supported params:
     }
 }
 ```
+
+## API test
+
+- **/upload**
+
+    Request
+    
+    ```bash
+    curl -i -F 'file=@me.jpg' http://localhost:8888/upload
+    ```
+    
+    Response
+    
+    ```json
+    {
+        "data": [
+            {
+                "contentType": "image/jpeg",
+                "createTime": 1532058499067,
+                "md5": "3909DBCAF2C02B51597E4A52ECE4FC39",
+                "name": "me.jpg",
+                "size": 21255
+            }
+        ],
+        "success": true
+    }
+    ```
+
+- **/get/{md5}**
+
+    Request
+    
+    ```bash
+    curl -i http://localhost:8888/get/3909DBCAF2C02B51597E4A52ECE4FC39
+    ``` 
+    
+    Response
+    
+    ```json
+    {
+        "data": {
+                "contentType": "image/jpeg",
+                "createTime": 1532058499067,
+                "md5": "3909DBCAF2C02B51597E4A52ECE4FC39",
+                "name": "me.jpg",
+                "size": 21255
+        },
+        "success": true
+    }
+    ```
+
+- **/download/{md5}**
+
+    Request
+    
+    ```bash
+    curl -o me.jpg http://localhost:8888/download/3909DBCAF2C02B51597E4A52ECE4FC39
+    ``` 
+
+- **/list?page&limit**
+
+    Request
+    
+    ```bash
+    curl -i http://localhost:8888/list?page=1&limit=10
+    ```
+    
+    Response
+    
+    ```json
+    {
+        "data": {
+            "rows": [
+                {
+                    "contentType": "image/jpeg",
+                    "createTime": 1532058577347,
+                    "md5": "2DADEA65B5153D890B72FDBA00E04E4E",
+                    "name": "d67c9a059b1a4a619a222bfd7126274a.jpg",
+                    "size": 24590
+                },
+                {
+                    "contentType": "image/jpeg",
+                    "createTime": 1532058559807,
+                    "md5": "3909DBCAF2C02B51597E4A52ECE4FC39",
+                    "name": "me.jpg",
+                    "size": 21255
+                }
+            ],
+            "total": 2
+        },
+        "success": true
+    }
+    ```
