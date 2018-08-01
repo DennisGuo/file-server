@@ -48,6 +48,7 @@ public class Application {
             server.createContext("/get", new GetHandler());
             server.createContext("/download", new DownloadHandler());
             server.createContext("/list", new ListHandler());
+            server.createContext("/status", new StatusHandler());
             server.setExecutor(getHttpExecutor()); // creates a default executor
             server.start();
             L.i(String.format("Please visit：http://localhost:%s/",PORT));

@@ -10,6 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -62,7 +63,7 @@ public class FileDataService {
         FileData fileData = null;
 
         //先存到tmp中，计算md5
-        File file = new File(Application.PATH + "/tmp/" + UUID.randomUUID());
+        File file = new File(Application.PATH + File.separator + "tmp"+File.separator + UUID.randomUUID());
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
@@ -82,7 +83,7 @@ public class FileDataService {
         } else {
 
             //移动到data中
-            String dest = Application.PATH + "/data/" + md5 + "." + FilenameUtils.getExtension(item.getName());
+            String dest = Application.PATH +File.separator + "data" + File.separator + md5 + "." + FilenameUtils.getExtension(item.getName());
             File target = new File(dest);
             if (!target.getParentFile().exists()) {
                 target.getParentFile().mkdirs();
@@ -146,7 +147,7 @@ public class FileDataService {
      * @throws IOException
      */
     public static byte[] getFileBytes(FileData data) throws IOException {
-        String path = Application.PATH + "/data/" + data.getMd5() + "." + FilenameUtils.getExtension(data.getName());
+        String path = Application.PATH + File.separator +"data" + File.separator +data.getMd5() + "." + FilenameUtils.getExtension(data.getName());
         return Files.readAllBytes(Paths.get(path));
     }
 
@@ -179,5 +180,22 @@ public class FileDataService {
             return ((Number)rs.get(0).values().toArray()[0]).intValue();
         }
         return 0;
+    }
+
+    /**
+     * 获取当前的存储状态
+     * @return
+     * @throws IOException
+     */
+    public static JSONObject getStatus() throws IOException, SQLException {
+        FileStore store = Files.getFileStore(Paths.get(Application.PATH));
+        long total = store.getTotalSpace();
+        long usable = store.getUsableSpace();
+        int count = getTotal();
+        JSONObject rs = new JSONObject();
+        rs.put("diskTotal",total);
+        rs.put("diskUsable",usable);
+        rs.put("total",count);
+        return rs;
     }
 }

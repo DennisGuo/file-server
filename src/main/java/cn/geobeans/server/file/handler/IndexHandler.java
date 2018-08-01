@@ -21,6 +21,7 @@ public class IndexHandler extends BaseHandler {
                 "/get/{md5}","Get file info with md5.",
                 "/download/{md5}","Download file with md5.",
                 "/list?page&limit","Get file list with pages.",
+                "/status","Get storage status, include files total count , disk usage etc.",
         };
         //定义API
         JSONArray apis = new JSONArray();

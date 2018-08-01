@@ -5,6 +5,7 @@ import cn.geobeans.server.file.common.PageList;
 import cn.geobeans.server.file.config.Database;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 
@@ -49,5 +50,14 @@ public class FileDataServiceTest extends BaseTest {
     public void getList() throws SQLException {
         PageList<FileData> rs = FileDataService.getList(1,20);
         printJson(rs);
+    }
+
+    @Test
+    public void getStatus(){
+        try {
+            printJson(FileDataService.getStatus());
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
