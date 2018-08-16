@@ -12,31 +12,40 @@ import java.io.OutputStream;
 
 public class IndexHandler extends BaseHandler {
 
+    public IndexHandler() {
+        super(GET);
+    }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        super.handle(httpExchange);
-        //String response = JSON.toJSONString(new JSONResponse(true,"Welcome To GeoBeans File Server."));
-        String[] arr = new String[]{
-                "/upload","Upload file multipart/form-data.",
-                "/get/{md5}","Get file info with md5.",
-                "/download/{md5}","Download file with md5.",
-                "/list?page&limit","Get file list with pages.",
-                "/status","Get storage status, include files total count , disk usage etc.",
-        };
-        //定义API
-        JSONArray apis = new JSONArray();
-        for(int i=0;i<arr.length;i=i+2){
-            JSONObject api = new JSONObject();
-            api.put("uri",arr[i]);
-            api.put("description",arr[i+1]);
-            apis.add(api);
+        try {
+            super.handle(httpExchange);
+            //String response = JSON.toJSONString(new JSONResponse(true,"Welcome To GeoBeans File Server."));
+            String[] arr = new String[]{
+                    "/upload","Upload file multipart/form-data.",
+                    "/get/{md5}","Get file info with md5.",
+                    "/download/{md5}","Download file with md5.",
+                    "/list?page&limit","Get file list with pages.",
+                    "/status","Get storage status, include files total count , disk usage etc.",
+            };
+            //定义API
+            JSONArray apis = new JSONArray();
+            for(int i=0;i<arr.length;i=i+2){
+                JSONObject api = new JSONObject();
+                api.put("uri",arr[i]);
+                api.put("description",arr[i+1]);
+                apis.add(api);
+            }
+
+            JSONObject data = new JSONObject();
+            data.put("author","guohengxi.dennis@gmail.com");
+            data.put("apis",apis);
+
+            super.json(httpExchange,new JSONResponse(true,"Welcome To GeoBeans File Server.",data));
+        } catch (IOException e) {
+            e.printStackTrace();
+            super.json(httpExchange,new JSONResponse(false,e.getMessage()));
         }
-
-        JSONObject data = new JSONObject();
-        data.put("author","guohengxi.dennis@gmail.com");
-        data.put("apis",apis);
-
-        super.json(httpExchange,new JSONResponse(true,"Welcome To GeoBeans File Server.",data));
     }
 
 }

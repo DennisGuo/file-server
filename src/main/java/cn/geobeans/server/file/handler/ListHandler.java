@@ -14,10 +14,14 @@ import java.sql.SQLException;
  */
 public class ListHandler extends BaseHandler {
 
+    public ListHandler() {
+        super(GET);
+    }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        super.handle(httpExchange);
         try {
+            super.handle(httpExchange);
             String query = httpExchange.getRequestURI().getQuery();
             int page = 1,limit=10;
             if(query!=null && !query.trim().equals("")){

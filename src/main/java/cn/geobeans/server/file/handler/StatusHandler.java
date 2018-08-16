@@ -15,10 +15,14 @@ import java.nio.file.Paths;
 
 public class StatusHandler extends BaseHandler {
 
+    public StatusHandler() {
+        super(GET);
+    }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        super.handle(httpExchange);
         try {
+            super.handle(httpExchange);
             // TODO： 查询当前状态，磁盘：使用量/总容量
 
             super.json(httpExchange,new JSONResponse(FileDataService.getStatus()));

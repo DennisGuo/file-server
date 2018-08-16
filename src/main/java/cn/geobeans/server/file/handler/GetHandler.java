@@ -12,11 +12,15 @@ import java.sql.SQLException;
  */
 public class GetHandler extends BaseHandler {
 
+    public GetHandler() {
+        super(GET);
+    }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        super.handle(httpExchange);
         JSONResponse rs;
         try {
+            super.handle(httpExchange);
             String uri = httpExchange.getRequestURI().getRawPath();
             String[] arr = uri.split("/");
             String md5 = arr[arr.length - 1];

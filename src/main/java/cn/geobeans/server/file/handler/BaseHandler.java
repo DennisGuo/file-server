@@ -20,16 +20,31 @@ import java.util.Map;
  */
 public class BaseHandler implements HttpHandler {
 
+
+
     protected static final String CHARSET = "UTF-8";
     protected static final String KEY_CONTENT_TYPE = "Content-Type";
 
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+    public static final String DELETE = "DELETE";
+
+    private String method;
+
+    public BaseHandler(String method) {
+        this.method = method;
+    }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+        String requestMethod =httpExchange.getRequestMethod();
         L.d(String.format("%s %s , requested from %s",
-                httpExchange.getRequestMethod(),
+                requestMethod,
                 httpExchange.getRequestURI().toString(),
                 httpExchange.getRemoteAddress().toString()));
+        if(!requestMethod.equalsIgnoreCase(this.method)){
+            throw new IOException("Request method not allowed.");
+        }
     }
 
     /**

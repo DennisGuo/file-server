@@ -16,13 +16,17 @@ import java.util.List;
 
 public class UploadHandler extends BaseHandler{
 
+    public UploadHandler() {
+        super(POST);
+    }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        super.handle(httpExchange);
-        DiskFileItemFactory d = new DiskFileItemFactory();
-        ServletFileUpload up = new ServletFileUpload(d);
-        List<FileData> rs = new ArrayList<>();
         try {
+            super.handle(httpExchange);
+            DiskFileItemFactory d = new DiskFileItemFactory();
+            ServletFileUpload up = new ServletFileUpload(d);
+            List<FileData> rs = new ArrayList<>();
             List<FileItem> result = up.parseRequest(new HttpHandlerRequestContext(httpExchange));
             for(FileItem item:result){
                 FileData tmp = FileDataService.save(item);
