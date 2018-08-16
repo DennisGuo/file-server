@@ -43,6 +43,10 @@ Supported params:
             {
                 "description": "Get file list with pages.",
                 "uri": "/list?page&limit"
+            },            
+            {
+                "description": "Get storage status, include files total count , disk usage etc.",
+                "uri": "/status"
             }
         ],
         "author": "guohengxi.dennis@gmail.com"
