@@ -5,6 +5,7 @@ import cn.geobeans.server.file.service.FileData;
 import cn.geobeans.server.file.service.FileDataService;
 import com.sun.net.httpserver.HttpExchange;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
@@ -27,16 +28,10 @@ public class DownloadHandler extends BaseHandler {
 
                 FileData data = FileDataService.getByMd5(md5);
 
-                Map<String, String> header = new HashMap<>();
-                header.put(KEY_CONTENT_TYPE, data.getContentType());
-                header.put("Content-Disposition", "attachment;filename=" + URLEncoder.encode(data.getName(), CHARSET));
 
-                byte[] bytes = FileDataService.getFileBytes(data);
-
-                super.send(httpExchange, bytes, header);
-
+                super.sendFile(httpExchange,data);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             super.json(httpExchange, new JSONResponse(e.getMessage()));
         }

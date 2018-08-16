@@ -52,7 +52,7 @@ public class FileDataService {
     public static String md5(File file) throws IOException, NoSuchAlgorithmException {
 //        byte[] data = Files.readAllBytes(file.toPath());
 //        return md5(data);
-        return MD5.asHex(MD5.getHash(file));
+        return MD5.asHex(MD5.getHash(file)).toUpperCase();
     }
 
     /**
@@ -151,6 +151,16 @@ public class FileDataService {
     public static byte[] getFileBytes(FileData data) throws IOException {
         String path = Application.PATH + File.separator +"data" + File.separator +data.getMd5() + "." + FilenameUtils.getExtension(data.getName());
         return Files.readAllBytes(Paths.get(path));
+    }
+
+    /**
+     * 获取文件
+     * @param data
+     * @return
+     */
+    public static File getFile(FileData data){
+        String path = Application.PATH + File.separator +"data" + File.separator +data.getMd5() + "." + FilenameUtils.getExtension(data.getName());
+        return new File(path);
     }
 
     /**

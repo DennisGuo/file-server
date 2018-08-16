@@ -25,7 +25,7 @@ public class GetHandler extends BaseHandler {
             } else {
                 rs = new JSONResponse(FileDataService.getByMd5(md5));
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             rs = new JSONResponse(e.getMessage());
         }
