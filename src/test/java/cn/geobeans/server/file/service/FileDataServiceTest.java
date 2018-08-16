@@ -5,6 +5,7 @@ import cn.geobeans.server.file.common.PageList;
 import cn.geobeans.server.file.config.Database;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -57,6 +58,14 @@ public class FileDataServiceTest extends BaseTest {
         try {
             printJson(FileDataService.getStatus());
         } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void md5(){
+        try {
+            System.out.println(FileDataService.md5(new File("/home/ghx/Documents/system/cn_windows_10_multiple_editions_version_1607_updated_jul_2016_x64_dvd_9056935.iso")));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

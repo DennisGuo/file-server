@@ -4,6 +4,7 @@ import cn.geobeans.server.file.Application;
 import cn.geobeans.server.file.common.PageList;
 import cn.geobeans.server.file.config.Database;
 import com.alibaba.fastjson.JSONObject;
+import com.twmacinta.util.MD5;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FilenameUtils;
 
@@ -33,12 +34,12 @@ public class FileDataService {
      * @return
      * @throws NoSuchAlgorithmException
      */
-    public static String md5(byte[] data) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(data);
-        byte[] digest = md.digest();
-        return DatatypeConverter.printHexBinary(digest).toUpperCase();
-    }
+//    public static String md5(byte[] data) throws NoSuchAlgorithmException {
+//        MessageDigest md = MessageDigest.getInstance("MD5");
+//        md.update(data);
+//        byte[] digest = md.digest();
+//        return DatatypeConverter.printHexBinary(digest).toUpperCase();
+//    }
 
     /**
      * 计算文件的md5
@@ -49,8 +50,9 @@ public class FileDataService {
      * @throws NoSuchAlgorithmException
      */
     public static String md5(File file) throws IOException, NoSuchAlgorithmException {
-        byte[] data = Files.readAllBytes(file.toPath());
-        return md5(data);
+//        byte[] data = Files.readAllBytes(file.toPath());
+//        return md5(data);
+        return MD5.asHex(MD5.getHash(file));
     }
 
     /**

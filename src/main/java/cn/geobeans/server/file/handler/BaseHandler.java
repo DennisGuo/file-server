@@ -47,6 +47,7 @@ public class BaseHandler implements HttpHandler {
                 httpExchange.getResponseHeaders().set(key,header.get(key));
             }
         }
+        httpExchange.getResponseHeaders().set("Access-Control-Allow-Origin","*");
         httpExchange.sendResponseHeaders(200, bytes.length);
         @Cleanup OutputStream os = httpExchange.getResponseBody();
         os.write(bytes);
